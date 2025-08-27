@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -52,6 +51,7 @@ builder.Services.AddCors(options =>
 
 // Register services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<DatabaseSeeder>();
 
 var app = builder.Build();
 
@@ -68,11 +68,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Ensure database is created
+// Seed the database
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+
+    // Ensure database is created
     context.Database.EnsureCreated();
+
+    // Seed data
+    await seeder.SeedAsync();
 }
 
 app.Run("http://0.0.0.0:5000");
