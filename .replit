@@ -1,2 +1,36 @@
 [nix]
 channel = "stable-25_05"
+
+[workflows]
+runButton = "Start Full Stack"
+
+[[workflows.workflow]]
+name = "Start Backend"
+author = 46971075
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd Backend/Fintcs.API && dotnet run"
+
+[[workflows.workflow]]
+name = "Start Frontend"
+author = 46971075
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd Frontend && npm install && npm start"
+
+[[workflows.workflow]]
+name = "Start Full Stack"
+author = 46971075
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd Backend/Fintcs.API && dotnet run"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd Frontend && npm install && npm start"
